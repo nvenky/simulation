@@ -1,5 +1,6 @@
-module.exports = {
-  attributes: {
+module.exports = 
+  tableName: 'races',
+  attributes: 
     data: 'json'
-  }
-}
+  
+
