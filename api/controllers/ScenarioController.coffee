@@ -30,19 +30,46 @@ module.exports =
      @query.exchange_id = req.param('exchange_id') if req.param('exchange_id')
      @query.market_type = req.param('market_type')if req.param('market_type')
 
+     res.badRequest('Position, Stake and Side is mandatory') unless req.param('stake') and req.param('side') and req.param('position')
+
      Race.native (err, raceCollection) =>
        #output = {out: 'racesMapReduce', query: @query}
+    #   map = () ->
+    #     for market_runner in @market_runners
+    #       if !isNaN(market_runner.actual_sp)
+    #         if req.param('side') == 'BACK' 
+    #           if market_runner.status == 'WINNER'
+    #             @amt = parseFloat(market_runner.actual_sp * req.stake('stake'))
+    #           else
+    #             @amt = -req.param('stake') 
+    #         else
+    #           if market_runner.status == 'WINNER'
+    #             @amt = -req.param('stake')
+    #           else
+    #             @amt = req.param('stake') 
+    #         emit('12345', {ret: @amt})
+
+    #map = (stake, side, position) -> () ->
        map = () ->
-         if this.market_runners[0].status == 'WINNER'
-           val = {ret: parseFloat(this.market_runners[0].actual_sp)}
-           if isNaN(val.ret)
-              print("Found it = " + this.market_runners[0].actual_sp)
-              print("Found it = " + this.id)
-           else
-             emit('12345', val)
+               side = 'BACK' 
+               stake = 5
+               for market_runner in this.market_runners
+                 if !isNaN(market_runner.actual_sp)
+                   if side == 'BACK' 
+                     if market_runner.status == 'WINNER'
+                       @amt = parseFloat(market_runner.actual_sp * stake)
+                     else
+                       @amt = -stake 
+                   else
+                     if market_runner.status == 'WINNER'
+                       @amt = -stake
+                     else
+                       @amt = stake
+                   emit(this._id, {ret: @amt})
+  
 
        reduce = (key, values) ->
-          reducedVal = {ret:  0 }
+          reducedVal = {ret:  0}
           vals = []
           for val in values
              vals.push val.ret
@@ -51,13 +78,37 @@ module.exports =
           print("Reduced value " + reducedVal.ret)
           reducedVal
 
+       side = req.param('side') 
+       position = req.param('position') 
+       stake = req.param('stake') 
+
        raceCollection.mapReduce(
                map,
                reduce,
                #output,
-               {out: 'racesMapReduce', query: {exchange_id: 2, market_type: 'PLACE'}}
+               {out: 'racesMapReduce', query: {exchange_id: 2, market_type: 'WIN', status: 'CLOSED'}}
                (err, collection, stats) ->
-                 debugger
                  #res.json({'data': collection})
                  res.send('Reduced successfully')
        )
+    
+   mapper: (req) ->
+      @side = req.param('side') 
+      @position = req.param('position') 
+      @stake = req.param('stake') 
+      () =>
+         for market_runner in @market_runners
+           if !isNaN(market_runner.actual_sp)
+             if @side == 'BACK' 
+               if market_runner.status == 'WINNER'
+                 @amt = parseFloat(market_runner.actual_sp * @stake)
+               else
+                 @amt = -@stake 
+             else
+               if market_runner.status == 'WINNER'
+                 @amt = -@stake
+               else
+                 @amt = @stake
+             emit('12345', {ret: @amt})
+
+
