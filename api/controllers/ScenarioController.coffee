@@ -29,32 +29,14 @@ module.exports =
      @query = {}
      @query.exchange_id = req.param('exchange_id') if req.param('exchange_id')
      @query.market_type = req.param('market_type')if req.param('market_type')
-     debugger
 
      res.badRequest('Position, Stake and Side is mandatory') unless req.param('stake') and req.param('side') and req.param('position')
 
      Race.native (err, raceCollection) =>
-       #output = {out: 'racesMapReduce', query: @query}
-    #   map = () ->
-    #     for market_runner in @market_runners
-    #       if !isNaN(market_runner.actual_sp)
-    #         if req.param('side') == 'BACK' 
-    #           if market_runner.status == 'WINNER'
-    #             @amt = parseFloat(market_runner.actual_sp * req.stake('stake'))
-    #           else
-    #             @amt = -req.param('stake') 
-    #         else
-    #           if market_runner.status == 'WINNER'
-    #             @amt = -req.param('stake')
-    #           else
-    #             @amt = req.param('stake') 
-    #         emit('12345', {ret: @amt})
-
-    #map = (stake, side, position) -> () ->
-       newMap = () ->
+       map = () ->
          for scenario in scenarios
            for position in scenario.positions
-             print('Position '+ position)
+             #print('Position '+ position)
              market_runner = this.market_runners[position]             
              if market_runner and !isNaN(market_runner.actual_sp)
                if scenario.side == 'BACK' 
@@ -63,30 +45,14 @@ module.exports =
                  @amt = if market_runner.status == 'WINNER' then -scenario.stake else scenario.stake
                emit(this._id, {ret: parseFloat(@amt)})
 
-       map = () ->
-               for market_runner in this.market_runners
-                 if !isNaN(market_runner.actual_sp)
-                   if side == 'BACK' 
-                     if market_runner.status == 'WINNER'
-                       @amt = parseFloat(market_runner.actual_sp * stake)
-                     else
-                       @amt = -stake 
-                   else
-                     if market_runner.status == 'WINNER'
-                       @amt = -stake
-                     else
-                       @amt = stake
-                   emit(this._id, {ret: @amt})
-  
-
        reduce = (key, values) ->
           reducedVal = {ret:  0}
           vals = []
           for val in values
              vals.push val.ret
              reducedVal.ret += val.ret
-          print("Actual value " + vals)
-          print("Reduced value " + reducedVal.ret)
+          print("Key " + key + "  Actual value " + vals)
+          #print("Reduced value " + reducedVal.ret)
           reducedVal
 
        options = {
@@ -94,7 +60,6 @@ module.exports =
                    out: {inline: 1},
                    query: {exchange_id: 2, market_type: 'WIN', status: 'CLOSED'},
                    verbose: true,
-                   #scope: {side: req.param('side'), stake: req.param('stake')}
                    scope: {scenarios: [
                              {side: req.param('side'), stake: req.param('stake'), positions: [0,1,2,3]},
                              {side: 'BACK', stake: req.param('stake'), positions: [4,5,6,7]}
@@ -103,11 +68,11 @@ module.exports =
        }
 
        raceCollection.mapReduce(
-               newMap,
+               map,
                reduce,
                options,
                (err, collection, stats) ->
-                 res.json(collection)
+                 res.json({'response': collection, 'stats': stats})
        )
     
    mapper: (req) ->
