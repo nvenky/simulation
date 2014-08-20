@@ -33,18 +33,32 @@ module.exports =
      res.badRequest('Position, Stake and Side is mandatory') unless req.param('stake') and req.param('side') and req.param('position')
 
      Race.native (err, raceCollection) =>
-       map = () ->
-         for scenario in scenarios
-           for position in scenario.positions
-             #print('Position '+ position)
-             market_runner = this.market_runners[position]             
-             if market_runner and !isNaN(market_runner.actual_sp)
-               if scenario.side == 'BACK' 
-                 @amt = if market_runner.status == 'WINNER' then parseFloat(market_runner.actual_sp * scenario.stake) else -scenario.stake
-               else
-                 @amt = if market_runner.status == 'WINNER' then -scenario.stake else scenario.stake
-               emit(this._id, {ret: parseFloat(@amt)})
+       mapFunction = () ->
+         Mapper = () -> {
+           map: (record) ->
+            for scenario in scenarios
+             for position in @positions(scenario, record.market_runners.length)
+               #print('Position '+ position)
+               market_runner = record.market_runners[position]
+               if market_runner and !isNaN(market_runner.actual_sp)
+                 if scenario.side == 'BACK'
+                   @amt = if market_runner.status == 'WINNER' then parseFloat(market_runner.actual_sp * scenario.stake) - scenario.stake else -scenario.stake
+                 else
+                   @amt = if market_runner.status == 'WINNER' then -(parseFloat(market_runner.actual_sp * scenario.stake) - scenario.stake) else scenario.stake
+                 emit(record._id, {ret: parseFloat(@amt)})
+          
+           positions: (scenario, size) ->
+              switch(scenario.positions)
+                when 'ALL' then [0..(size - 1)]
+                when 'TOP 1/2' then [0..(Math.round(size * 0.5) - 1)]
+                when 'BOTTOM 1/2' then [Math.round(size * 0.5)..size-1]
+                when 'TOP 1/3' then [0..(Math.round(size * 0.33) - 1)]
+                when 'BOTTOM 1/3' then [Math.round(size * 0.66)..(size - 1)]
+                else scenario.positions
 
+         }
+         new Mapper().map(this)
+       
        reduce = (key, values) ->
           reducedVal = {ret:  0}
           vals = []
@@ -61,14 +75,14 @@ module.exports =
                    query: {exchange_id: 2, market_type: 'WIN', status: 'CLOSED'},
                    verbose: true,
                    scope: {scenarios: [
-                             {side: req.param('side'), stake: req.param('stake'), positions: [0,1,2,3]},
-                             {side: 'BACK', stake: req.param('stake'), positions: [4,5,6,7]}
+                             {side: req.param('side'), stake: req.param('stake'), positions: 'TOP 1/2'},
+                             {side: 'BACK', stake: req.param('stake'), positions: 'BOTTOM 1/2'}
                    ]}
 
        }
 
        raceCollection.mapReduce(
-               map,
+               mapFunction,
                reduce,
                options,
                (err, collection, stats) ->
