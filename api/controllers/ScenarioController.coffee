@@ -34,18 +34,11 @@ module.exports =
 
      Race.native (err, raceCollection) =>
        mapFunction = () ->
-         Mapper = () -> {
+         Mapper = () -> 
            map: (record) ->
             for scenario in scenarios
              for position in @positions(scenario, record.market_runners.length)
-               #print('Position '+ position)
-               market_runner = record.market_runners[position]
-               if market_runner and !isNaN(market_runner.actual_sp)
-                 if scenario.side == 'BACK'
-                   @amt = if market_runner.status == 'WINNER' then parseFloat(market_runner.actual_sp * scenario.stake) - scenario.stake else -scenario.stake
-                 else
-                   @amt = if market_runner.status == 'WINNER' then -(parseFloat(market_runner.actual_sp * scenario.stake) - scenario.stake) else scenario.stake
-                 emit(record._id, {ret: parseFloat(@amt)})
+               @profitLoss(scenario, record._id, record.market_runners[position])
           
            positions: (scenario, size) ->
               switch(scenario.positions)
@@ -56,7 +49,17 @@ module.exports =
                 when 'BOTTOM 1/3' then [Math.round(size * 0.66)..(size - 1)]
                 else scenario.positions
 
-         }
+            profitLoss: (scenario, market_id, market_runner) ->
+               if market_runner and !isNaN(market_runner.actual_sp)
+                 price = parseFloat(market_runner.actual_sp)
+                 if scenario.side == 'BACK'
+                   amt = if market_runner.status == 'WINNER' then (price * scenario.stake) - scenario.stake else -scenario.stake
+                 else if  side == 'LAY'
+                   amt = if market_runner.status == 'WINNER' then -((price * scenario.stake) - scenario.stake) else scenario.stake
+                 else #LAY (SP)
+                   amt = if market_runner.status == 'WINNER' then -scenario.stake else (scenario.stake / price)
+                 emit(market_id, {ret: amt})
+                 amt
          new Mapper().map(this)
        
        reduce = (key, values) ->
@@ -64,15 +67,15 @@ module.exports =
           vals = []
           for val in values
              vals.push val.ret
-             reducedVal.ret += val.ret
-          print("Key " + key + "  Actual value " + vals)
+             reducedVal.ret += Math.round(val.ret * 100) / 100
+          #print("Key " + key + "  Actual value " + vals)
           #print("Reduced value " + reducedVal.ret)
           reducedVal
 
        options = {
                    #out: 'racesMapReduce',
                    out: {inline: 1},
-                   query: {exchange_id: 2, market_type: 'WIN', status: 'CLOSED'},
+                   #query: {exchange_id: 2, market_type: 'WIN', status: 'CLOSED'},
                    verbose: true,
                    scope: {scenarios: [
                              {side: req.param('side'), stake: req.param('stake'), positions: 'TOP 1/2'},
