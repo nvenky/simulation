@@ -14,6 +14,48 @@
 
 module.exports = function(grunt) {
 
+  //Grunt bower integration
+  grunt.registerTask('compileAssets', [
+    'clean:dev',
+    'bower:dev',
+    'jst:dev',
+    'less:dev',
+    'copy:dev',
+    'coffee:dev'
+  ]);
+
+
+  grunt.config.set('bower', {
+    dev: {
+        dest: '.tmp/public',
+        js_dest: '.tmp/public/js',
+        css_dest: '.tmp/public/styles'
+    }
+  });
+
+  grunt.loadNpmTasks('grunt-bower');
+
+  //grunt.loadNpmTasks('grunt-bower-task');
+  grunt.loadNpmTasks('grunt-wiredep');
+  grunt.initConfig({
+  // bower: {
+  //  install: {
+       //just run 'grunt bower:install' and you'll see files from your Bower packages in lib directory
+  //      layout: 'byType',
+  //      install: true,
+  //      verbose: false,
+  //      cleanTargetDir: false,
+  //      cleanBowerDir: false
+  //  }
+  // },
+   wiredep: {
+      target: {
+        src: [
+          'views/layout.ejs'
+        ]
+      }
+   }
+  });
 
 	// Load the include-all library in order to require all of our grunt
 	// configurations and task registrations dynamically.
