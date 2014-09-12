@@ -117,4 +117,5 @@ nbproject
 .idea
 .node_history
 assets/bower_components
-lib/
+bower_components/
+assets/dependencies/
