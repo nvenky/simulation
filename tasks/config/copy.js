@@ -22,12 +22,12 @@ module.exports = function(grunt) {
 				expand: true,
 				cwd: './bower_components/font-awesome/',
 				src: ['fonts/*'],
-				dest: '.tmp/public/dependencies'
+				dest: '.tmp/public/assets/dependencies'
       },{
 				expand: true,
 				cwd: './assets',
 				src: ['**/*.!(coffee|less)'],
-				dest: '.tmp/public/'
+				dest: '.tmp/public/assets'
 			}
       ]
 		},
