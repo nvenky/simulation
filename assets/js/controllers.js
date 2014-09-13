@@ -2,8 +2,8 @@
 
 /* Controllers */
 
-angular.module('myApp.controllers', []).
-  controller('MyCtrl1', [function() {
+angular.module('PuntersBotApp.controllers', []).
+  controller('HomePage', [function() {
 
   }])
   .controller('MyCtrl2', [function() {

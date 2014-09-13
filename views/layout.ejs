@@ -3,6 +3,8 @@
 <head>
   <meta charset="utf-8">
   <title>Punters Bot</title>
+  <!-- Viewport mobile tag for sensible mobile support -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <!--STYLES-->
   <link rel="stylesheet" href="/styles/app.css">
   <link rel="stylesheet" href="/styles/grayscale.css">
@@ -17,12 +19,16 @@
   <div ng-view>
     <%-body%>
   </div>
+  <!--TEMPLATES-->
+  <script type="text/javascript" src="/jst.js"></script>
+  <!--TEMPLATES END-->
+  
   <!--SCRIPTS-->
   <script src="/dependencies/jquery/jquery.js"></script>
+  <script src="/dependencies/angular/angular.js"></script>
   <script src="/dependencies/angular-bootstrap/ui-bootstrap-tpls.js"></script>
   <script src="/dependencies/angular-route/angular-route.js"></script>
   <script src="/dependencies/angular-socket-io/socket.js"></script>
-  <script src="/dependencies/angular/angular.js"></script>
   <script src="/dependencies/bootstrap-sass-official/affix.js"></script>
   <script src="/dependencies/bootstrap-sass-official/alert.js"></script>
   <script src="/dependencies/bootstrap-sass-official/button.js"></script>
@@ -46,7 +52,6 @@
   <script src="/js/filters.js"></script>
   <script src="/js/grayscale.js"></script>
   <script src="/js/models/Race.js"></script>
-  <script src="/js/models/Scenario.js"></script>
   <script src="/js/services.js"></script>
   <!--SCRIPTS END-->
 </body>

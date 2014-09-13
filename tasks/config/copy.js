@@ -17,12 +17,19 @@ module.exports = function(grunt) {
 
 	grunt.config.set('copy', {
 		dev: {
-			files: [{
+			files: [
+      {
+				expand: true,
+				cwd: './bower_components/font-awesome/',
+				src: ['fonts/*'],
+				dest: '.tmp/public/dependencies'
+      },{
 				expand: true,
 				cwd: './assets',
 				src: ['**/*.!(coffee|less)'],
-				dest: '.tmp/public'
-			}]
+				dest: '.tmp/public/'
+			}
+      ]
 		},
 		build: {
 			files: [{
