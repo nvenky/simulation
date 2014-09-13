@@ -1,10 +1,9 @@
 module.exports.connections = {
   mongodbServer: {
     adapter: 'sails-mongo',
-    host: 'localhost',
-    port: 27017,
     // user: 'username',
     // password: 'password',
-    database: 'punters_bot'
+    url: process.env.MONGOHQ_URL || 'mongodb://localhost:27017/punters_bot'
+    //database: 'punters_bot'
   }
 };
