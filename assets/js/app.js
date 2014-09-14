@@ -10,7 +10,7 @@ angular.module('PuntersBotApp', [
   'PuntersBotApp.controllers'
 ]).
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/', {templateUrl: 'assets/templates/homepage.html', controller: 'HomePage'});
-  $routeProvider.when('/view2', {templateUrl: 'assets/partials/partial2.html', controller: 'MyCtrl2'});
-  $routeProvider.otherwise({redirectTo: '/'});
+  $routeProvider.when('/index', {templateUrl: 'assets/partials/homepage.html', controller: 'HomeController'});
+  $routeProvider.when('/simulation', {templateUrl: 'assets/partials/simulation.html', controller: 'SimulationController'});
+  $routeProvider.otherwise({redirectTo: '/index'});
 }]);

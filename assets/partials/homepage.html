@@ -1,4 +1,5 @@
     <!-- Navigation -->
+<div class='homepage' ng-controller="HomeController as home">    
     <nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -18,16 +19,19 @@
                         <a href="#page-top"></a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#why">Why?</a>
+                        <a class="page-scroll" ng-click="home.why()">Why?</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="#about">About</a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#pricing">Pricing</a>
+                        <a class="page-scroll" href="#pricing">Sign up</a>
                     </li>
                     <li>
                         <a class="page-scroll" href="#contact">Contact</a>
+                    </li>
+                    <li>
+                        <a class="page-scroll" href="/#/simulation">Try Now</a>
                     </li>
                 </ul>
             </div>
@@ -44,7 +48,7 @@
                     <div class="col-md-8 col-md-offset-2">
                         <h1 class="brand-heading">Punters Bot</h1>
                         <p class="intro-text">Automate your Bets.</p>
-                        <a href="#about" class="btn btn-circle page-scroll">
+                        <a href="#why" class="btn btn-circle page-scroll">
                             <i class="fa fa-angle-double-down animated"></i>
                         </a>
                     </div>
@@ -79,7 +83,7 @@
     <section id="pricing" class="container content-section text-center">
       <div class="container">
         <div class="col-lg-8 col-lg-offset-2">
-          <h2>Pricing</h2>
+          <h2>Sign up</h2>
           <div class="container-fluid">
             <div class="row-fluid">
               <div class="span3 pricing pro">
@@ -127,3 +131,4 @@
             <p>Copyright &copy; PuntersBot 2014</p>
         </div>
     </footer>
+</div>

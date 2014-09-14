@@ -15,31 +15,33 @@
  */
 module.exports = function(grunt) {
 
-	grunt.config.set('copy', {
-		dev: {
-			files: [
+  grunt.config.set('copy', {
+    dev: {
+      files: [
       {
-				expand: true,
-				cwd: './bower_components/font-awesome/',
-				src: ['fonts/*'],
-				dest: '.tmp/public/assets/dependencies'
-      },{
-				expand: true,
-				cwd: './assets',
-				src: ['**/*.!(coffee|less)'],
-				dest: '.tmp/public/assets'
-			}
+        expand: true,
+        cwd: './assets',
+        src: ['**/*.!(coffee|less|eot|svg|ttf|woff|otf)'],
+        dest: '.tmp/public/assets'
+      },
+      {
+        expand: true,
+        flatten: true,
+        cwd: './assets',
+        src: ['**/*.{eot,svg,ttf,woff,otf}'],
+        dest: '.tmp/public/assets/dependencies/fonts'
+      }
       ]
-		},
-		build: {
-			files: [{
-				expand: true,
-				cwd: '.tmp/public',
-				src: ['**/*'],
-				dest: 'www'
-			}]
-		}
-	});
+    },
+    build: {
+      files: [{
+        expand: true,
+        cwd: '.tmp/public',
+        src: ['**/*'],
+        dest: 'www'
+      }]
+    }
+  });
 
-	grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-contrib-copy');
 };
