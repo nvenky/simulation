@@ -14,7 +14,6 @@
 
 module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-bower-task');
-  //grunt.loadNpmTasks('grunt-wiredep');
   //grunt.loadNpmTasks('grunt-forever');
   var path = require('path');
   grunt.initConfig({

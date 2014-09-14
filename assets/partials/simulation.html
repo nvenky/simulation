@@ -11,13 +11,13 @@
           <i class="fa fa-bar-chart-o fa-fw"></i> Scenarios
         </div>
         <div class="panel-body">         
-          <form name='simulationForm' class='form-horizontal' ng-submit='simulation.run()'> 
+          <form name='simulationForm' class='form-horizontal' ng-submit='run()' novalidation> 
             <div id='simulation'>
               <div class="form-group">
                 <label for="commission" class='col-md-2 control-label'>Commission</label>
                 <div class='col-md-2'>
                   <div class="input-group">
-                    <input type="text" ng-model="simulation.scenario.commission" value='5' class='form-control'></input>
+                    <input type="text" ng-model="simulation.scenario.commission" value='5' class='form-control' required></input>
                     <span class="input-group-addon">%</span>
                   </div>
                 </div>
@@ -34,9 +34,8 @@
                   </select>  
                 </div>
                 <div class='col-md-2'>
-                  <select ng-model="simulation.marketFilter.eventTypeId" class='form-control'>
+                  <select ng-model="simulation.marketFilter.eventTypeId" ng-options="eventType.name in simulation.eventTypes"  class='form-control' required>
                     <option>Event Type<option>
-                    <option ng-repeat="eventType in simulation.eventTypes" value="{{eventType.id}}">{{eventType.name}}</option>
                   </select>  
                 </div>
                 <div class='col-md-2'>
@@ -58,7 +57,7 @@
                 <div class="form-group">
                   <label for="market_type" class='col-md-2 control-label'>Position</label>
                   <div class='col-md-2'>
-                    <input ng-model='scenario.position' type='text' class='form-control' placeholder='Comma Seperated'></input>
+                    <input ng-model='scenario.position' type='text' class='form-control' placeholder='Comma Seperated' required></input>
                   </div>
                   <div class='col-md-2'>
                     <select ng-model="simulation.scenario.range" class='form-control'>
@@ -92,12 +91,12 @@
                   <div class='col-md-2'>
                     <div class="input-group">
                       <span class="input-group-addon">$</span>
-                      <input type="text" ng-model="scenario.size" class='form-control' placeholder='Sixe'></input>
+                      <input type="text" ng-model="scenario.size" class='form-control' placeholder='Size' required></input>
                     </div>
                   </div>
                 </div>
               </div>              
-              <input type="submit" class='save_button btn btn-primary'></input>
+              <button type="submit" class='btn btn-primary'>Run</button>
             </div>
 
           </div>
@@ -109,7 +108,7 @@
     <div id='graph'></div>
     <div id='details'></div>
     <div id="loadingOverlay" class="loadingOverlay" style="display:none">
-      <img src="/assets/ajax_loader.gif" id="spinner" class='centered'/>
+      <img src="/assets/img/ajax_loader.gif" id="spinner" class='centered'/>
     </div>
   </div>
 

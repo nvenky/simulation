@@ -30,6 +30,12 @@ module.exports = function(grunt) {
         cwd: './assets',
         src: ['**/*.{eot,svg,ttf,woff,otf}'],
         dest: '.tmp/public/assets/dependencies/fonts'
+      },
+      {
+        expand: true,
+        cwd: './assets/js',
+        src: ['**/*.map'],
+        dest: '.tmp/public/assets/js/'
       }
       ]
     },
