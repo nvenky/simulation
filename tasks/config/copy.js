@@ -21,7 +21,7 @@ module.exports = function(grunt) {
       {
         expand: true,
         cwd: './assets',
-        src: ['**/*.!(coffee|less|eot|svg|ttf|woff|otf)'],
+        src: ['**/*.!(eot|svg|ttf|woff|otf)'],
         dest: '.tmp/public/assets'
       },
       {
@@ -38,6 +38,15 @@ module.exports = function(grunt) {
         dest: '.tmp/public/assets/js/'
       }
       ]
+    },
+    prod: {
+      files: [{
+        expand: true,
+        flatten: true,
+        cwd: './assets',
+        src: ['**/*.{eot,svg,ttf,woff,otf}'],
+        dest: '.tmp/public/assets/fonts'
+      }]
     },
     build: {
       files: [{

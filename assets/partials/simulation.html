@@ -1,4 +1,4 @@
-<div id="container" ng-controller='SimulationController as simulation'>
+<div id="container">
   <div class="row">
     <div class="col-md-12">
       <h1 class="page-header">Simulation</h1>
@@ -11,7 +11,7 @@
           <i class="fa fa-bar-chart-o fa-fw"></i> Scenarios
         </div>
         <div class="panel-body">         
-          <form name='simulationForm' class='form-horizontal' ng-submit='run()' novalidation> 
+          <form name='simulationForm' class='form-horizontal' ng-submit='run()' ng-controller='SimulationController as simulation' novalidation> 
             <div id='simulation'>
               <div class="form-group">
                 <label for="commission" class='col-md-2 control-label'>Commission</label>
@@ -34,7 +34,7 @@
                   </select>  
                 </div>
                 <div class='col-md-2'>
-                  <select ng-model="simulation.marketFilter.eventTypeId" ng-options="eventType.name in simulation.eventTypes"  class='form-control' required>
+                  <select ng-model="simulation.marketFilter.eventTypeId" ng-options="eventType.name for eventType in eventTypes"  class='form-control' required>
                     <option>Event Type<option>
                   </select>  
                 </div>

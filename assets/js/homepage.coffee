@@ -5,7 +5,7 @@ $('.homepage').scroll ->
     $(".navbar-fixed-top").removeClass("top-nav-collapse")
   
 
-$('.homepage') ->
+$('.homepage').ready ->
   $('a.page-scroll').bind 'click', (event)->
     $anchor = $(this)
     $('html, body').stop().animate({

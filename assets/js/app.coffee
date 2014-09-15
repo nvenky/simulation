@@ -1,7 +1,6 @@
 angular.module('PuntersBotApp', [
   'ngRoute',
   'PuntersBotApp.filters',
-  'PuntersBotApp.services',
   'PuntersBotApp.directives',
   'PuntersBotApp.controllers'
 ]).
