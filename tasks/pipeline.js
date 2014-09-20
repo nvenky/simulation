@@ -30,6 +30,7 @@ var jsFilesToInject = [
   // Dependencies like jQuery, or Angular are brought in here
   'assets/dependencies/jquery/*.js',
   'assets/dependencies/angular/*.js',
+  'assets/dependencies/highcharts/highcharts.js',
   'assets/dependencies/**/*.js',
 
   // All of the rest of your client-side js files

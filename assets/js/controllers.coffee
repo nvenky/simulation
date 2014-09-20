@@ -24,7 +24,28 @@ angular.module('PuntersBotApp.controllers', [])
       $scope.run = ->
         $http.post('/scenario/simulate', $scope.simulationParams)
           .success (data, status)->
-            $log(data)
+            new Highcharts.Chart
+                chart:
+                    animation: true,
+                    renderTo: 'chart',
+                    type: 'StockChart',
+                    exporting:
+                      enabled: true
+                    ,
+                   rangeSelector :
+                       selected : 1,
+                       inputEnabled: $('#container').width() > 480
+                   ,
+                   title : {
+                       text : 'Simulation Result'
+                   },
+                   series : [{
+                     name : 'Earnings',
+                     data : data.response,
+                     tooltip:
+                      valueDecimals: 2
+                  }]
+                             
   ]
        
 
