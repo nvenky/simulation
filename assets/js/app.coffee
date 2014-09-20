@@ -2,7 +2,8 @@ angular.module('PuntersBotApp', [
   'ngRoute',
   'PuntersBotApp.filters',
   'PuntersBotApp.directives',
-  'PuntersBotApp.controllers'
+  'PuntersBotApp.controllers',
+  'datePicker'
 ]).
 config ['$routeProvider', ($routeProvider) ->
   $routeProvider.when('/index', {templateUrl: 'assets/partials/homepage.html', controller: 'HomeController'})

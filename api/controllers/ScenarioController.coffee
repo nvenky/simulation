@@ -1,10 +1,11 @@
 module.exports =
    simulate: (req, res) ->
-     @query = {}
-     @query.exchange_id = req.param('exchange_id') if req.param('exchange_id')
-     @query.market_type = req.param('market_type')if req.param('market_type')
+     @camelCaseToUnderscores = (str) ->
+        str.replace(/([a-z\d])([A-Z])/g, '$1_$2').toLowerCase()
+     @simulation = req.body
 
-     #res.badRequest('Position, Stake and Side is mandatory') unless req.param('stake') and req.param('side') and req.param('position')
+     @marketFilterQuery = {status: 'CLOSED'}
+     Object.keys(@simulation.marketFilter).map (key) => @marketFilterQuery[@camelCaseToUnderscores(key)] = @simulation.marketFilter[key] 
 
      Race.native (err, raceCollection) =>
        mapFunction = () ->
@@ -15,7 +16,7 @@ module.exports =
                @profitLoss(scenario, record._id, record.market_runners[position])
           
            positions: (scenario, size) ->
-              switch(scenario.positions)
+              switch(scenario.range)
                 when 'ALL' then [0..(size - 1)]
                 when 'TOP 1/2' then [0..(Math.round(size * 0.5) - 1)]
                 when 'BOTTOM 1/2' then [Math.round(size * 0.5)..size-1]
@@ -26,9 +27,9 @@ module.exports =
             profitLoss: (scenario, market_id, market_runner) ->
                if market_runner and !isNaN(market_runner.actual_sp)
                  price = parseFloat(market_runner.actual_sp)
-                 if scenario.side == 'BACK'
+                 if scenario.betType== 'BACK'
                    amt = if market_runner.status == 'WINNER' then (price * scenario.stake) - scenario.stake else -scenario.stake
-                 else if  scenario.side == 'LAY'
+                 else if  scenario.betType == 'LAY'
                    amt = if market_runner.status == 'WINNER' then -((price * scenario.stake) - scenario.stake) else scenario.stake
                  else #LAY (SP)
                    amt = if market_runner.status == 'WINNER' then -scenario.stake else (scenario.stake / price)
@@ -52,12 +53,9 @@ module.exports =
        options = {
                    #out: 'racesMapReduce',
                    out: {inline: 1},
-                   query: {exchange_id: 2, market_type: 'WIN', status: 'CLOSED'},
+                   query: @marketFilterQuery,
                    verbose: true,
-                   scope: {commission: 5, scenarios: [
-                             {side: req.param('side'), stake: req.param('stake'), positions: 'TOP 1/2'},
-                             {side: 'BACK', stake: req.param('stake'), positions: 'BOTTOM 1/2'}
-                           ]}
+                   scope: @simulation
 
        }
 
@@ -66,4 +64,4 @@ module.exports =
                reduce,
                options,
                (err, collection, stats) ->
-                 res.json({'response': collection, 'stats': stats}))
+                 res.json({'stats': stats, 'response': collection}))

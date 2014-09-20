@@ -33,6 +33,6 @@
   border-color: green;
 }
 
-.ng-dirty.ng-invalid{
+.ng-dirty.ng-invalid, .submitted.ng-invalid{
   border-color: red;
 }

@@ -1,20 +1,31 @@
 angular.module('PuntersBotApp.controllers', [])
-  .controller 'HomeController', ->
-    @why = ->
-        $location.hash('why')
-        $anchorScroll()
-  .controller 'SimulationController', ['$http', '$log', '$scope', ($http, $log, $scope) ->
-      $log.info('Inside the controller 2')
-      @marketFilter = {}
-      @scenario = {}
-      $scope.exchanges = [{id: 1, name:'AUS'},{id: 2, name: 'UK'}]
+  .controller 'HomeController', ['$scope', ($scope) ->
+      $('body').addClass('homepage')
+      $scope.$on "$destroy", ->
+         $('body').removeClass('homepage')
+  ]
+  .controller 'SimulationController', ['$scope', '$http', '$log', ($scope, $http, $log) ->
+      $scope.exchanges = [{id: 1, name:'Australia'},{id: 2, name: 'International'}]
       $scope.eventTypes = [{id: 7, name: 'Horse Racing'},{id: 4339, name: 'Greyhound Racing'}]
-      $scope.marketTypes = [{name: 'WIN'}, {name: 'PLACE'}]
-      @run = ->
-        $log('Before')
-        $http.get('/simulate').success ->
-           $log('HELLO')
-     ]
+      $scope.marketTypes = ['WIN', 'PLACE']
+      $scope.ranges = ['ALL', 'TOP 1/2', 'TOP 1/3', 'BOTTOM 1/2', 'BOTTOM 1/3']
+      $scope.betTypes= ['BACK', 'LAY', 'LAY (SP)']
+
+
+      $scope.simulationParams = {
+          commission: 6.5,
+          scenarios: [{stake: 5}],
+          marketFilter: {marketType: 'WIN', exchangeId: 1}
+      }
+      $scope.addScenario = ->
+        $scope.simulationParams.scenarios.push({})
+      $scope.deleteScenario = (index)->
+        $scope.simulationParams.scenarios.splice(index, 1)
+      $scope.run = ->
+        $http.post('/scenario/simulate', $scope.simulationParams)
+          .success (data, status)->
+            $log(data)
+  ]
        
 
   

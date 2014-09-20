@@ -1,11 +1,8 @@
-body{
-  color: #fff;
-  background-color: #000;
-}
-
 .homepage{
   width: 100%;
   height: 100%;
+  color: #fff;
+  background-color: #000;
 }
 
 .light {
