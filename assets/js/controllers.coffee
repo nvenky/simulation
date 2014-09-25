@@ -45,49 +45,21 @@ angular.module('PuntersBotApp.controllers', [])
       $scope.run = ->
         $http.post('/scenario/simulate', $scope.simulationParams)
           .success (data, status)->
-            $('#chart').innerH
-            new Highcharts.StockChart {
+            $('#chart').innerHTML=''
+            series =  for result, i in data.response
+                    [i+1, +result.value.ret.toFixed(2)]
+            new Highcharts.Chart {
                   chart:
                     renderTo: 'chart',
-            				zoomType: 'x'
-                  ,
-                  animation: true,
+                    zoomType: 'x'
+                  animation: true
                   exporting:
                     enabled: true
-                  ,
-                  rangeSelector:
-                     selected: 2,
-        		         buttons: [
-                       {
-        		              type: 'day',
-        		              count: 3,
-        		              text: '3d'
-        		           },{
-        		              type: 'week',
-        		              count: 1,
-        		              text: '1w'
-        		           },{
-        		              type: 'month',
-        		              count: 1,
-        		              text: '1m'
-        		           },{
-        		              type: 'month',
-        		              count: 6,
-        		              text: '6m'
-        		           },{
-        		              type: 'all',
-        		              text: 'All'
-                       }]
-                  ,
                   title:
                        text: 'Simulation Result'
-                  ,
-                  xAxis:
-                       type: 'datetime'
-                  ,
                   series: [{
                      name: 'Earnings',
-                     data: data.response.map (res) -> [Date.parse(res.value.startTime), Math.round(res.value.ret * 100) / 100],
+                     data: series,
                      tooltip:
                       valueDecimals: 2
                   }]
