@@ -46,9 +46,16 @@ angular.module('PuntersBotApp.controllers', [])
         $http.post('/scenario/simulate', $scope.simulationParams)
           .success (data, status)->
             $('#chart').innerHTML=''
+            raceResultsSeries = []
+            raceSummarySeries = []
+            summaryAmount = 0
             series =  for result, i in data.response
-                    [i+1, +result.value.ret.toFixed(2)]
-            new Highcharts.Chart {
+              result = result.value.ret
+              raceResultsSeries.push(result)
+              summaryAmount += result
+              raceSummarySeries.push(summaryAmount)
+            
+            new Highcharts.Chart
                   chart:
                     renderTo: 'chart',
                     zoomType: 'x'
@@ -57,13 +64,26 @@ angular.module('PuntersBotApp.controllers', [])
                     enabled: true
                   title:
                        text: 'Simulation Result'
-                  series: [{
-                     name: 'Earnings',
-                     data: series,
-                     tooltip:
-                      valueDecimals: 2
-                  }]
-            }
+                  plotOptions:
+                    series:
+                      cursor: 'pointer'
+                      pointStart: 1
+                      negativeColor: '#FF0000'
+                      marker:
+                         lineWidth: 1
+                      point:
+                        events:
+                          click: (e) ->
+                            $('#race-details').html("Hurray.. Got it #{@x} - #{@y}")
+                  series: [
+                    name: 'Earnings'
+                    data: raceResultsSeries
+                    type: 'column'
+                   ,
+                    name: 'Summary'
+                    data: raceSummarySeries
+                    type: 'spline'
+                  ]
   ]
        
 
