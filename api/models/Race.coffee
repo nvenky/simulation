@@ -1,6 +1,6 @@
-module.exports = 
-  tableName: 'races',
-  attributes: 
+module.exports =
+  tableName: 'races'
+  attributes:
     data: 'json'
   
 

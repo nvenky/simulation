@@ -75,8 +75,8 @@ angular.module('PuntersBotApp.controllers', [])
         $scope.summary = processedData
 
 
-      @renderChart = (processedData) ->
-        new Highcharts.Chart
+      @renderChart = (processedData) =>
+         @chart = new Highcharts.Chart
               chart:
                 renderTo: 'chart',
                 zoomType: 'x'
@@ -111,7 +111,7 @@ angular.module('PuntersBotApp.controllers', [])
 
       $scope.run = =>
         $scope.summary = null
-        $('#chart').innerHTML=''
+        @chart.destroy() if @chart
         $http.post('/scenario/simulate', $scope.simulationParams)
           .success (data, status) =>
             if !data.response or data.response.length == 0

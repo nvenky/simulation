@@ -19,7 +19,7 @@
           </div>
           <div class='row'>
             <div class='col-md-2'><span class='bold'>Profit/Loss</span></div>
-            <div class='col-md-1'>{{summary.profitLoss | currency}}</div>
+            <div class='col-md-1' ng-class="{'text-danger': summary.profitLoss &lt; 0, 'text-success': summary.profitLoss &gt; 0}">{{summary.profitLoss | currency}}</div>
             <div class='col-md-2'><span class='bold'>Highest Amount</span></div>
             <div class='col-md-1'>{{summary.highestAmount | currency}}</div>
             <div class='col-md-2'><span class='bold'>Lowest Amount</span></div>

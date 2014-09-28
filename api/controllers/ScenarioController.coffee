@@ -34,6 +34,7 @@ module.exports =
             profitLoss: (scenario, market, market_runner) ->
                if market_runner and !isNaN(market_runner.actual_sp)
                  price = parseFloat(market_runner.actual_sp)
+                 return 0 if (scenario.minOdds and scenario.minOdds > price) or (scenario.maxOdds and scenario.maxOdds < price)
                  if scenario.betType== 'BACK'
                    amt = if market_runner.status == 'WINNER' then (price * scenario.stake) - scenario.stake else -scenario.stake
                  else if  scenario.betType == 'LAY'
