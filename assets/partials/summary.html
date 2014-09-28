@@ -1,0 +1,33 @@
+<div class="row" ng-hide="summary == null">
+  <div class="col-md-12">
+    <div class="panel panel-success">
+      <div class="panel-heading">
+        <i class="fa fa-bar-chart-o fa-fw"></i>Summary
+      </div>
+      <!-- /.panel-heading -->
+      <div class="panel-body">
+        <div class="summary row">
+          <div class='row'>
+            <div class='col-md-2'><span class='bold'>Matching races</span></div>
+            <div class='col-md-1'>{{summary.counts.output}}</div>
+            <div class='col-md-2'><span class='bold'>Matching runners</span></div>
+            <div class='col-md-1'>{{summary.counts.emit}}</div>
+            <div class='col-md-2'><span class='bold'>Winning races</span></div>
+            <div class='col-md-1'>{{summary.winningRaces}}</div>
+            <div class='col-md-2'><span class='bold'>Winning Percentage</span></div>
+            <div class='col-md-1'>{{summary.winningPercentage | number: 2}} %</div>
+          </div>
+          <div class='row'>
+            <div class='col-md-2'><span class='bold'>Profit/Loss</span></div>
+            <div class='col-md-1'>{{summary.profitLoss | currency}}</div>
+            <div class='col-md-2'><span class='bold'>Highest Amount</span></div>
+            <div class='col-md-1'>{{summary.highestAmount | currency}}</div>
+            <div class='col-md-2'><span class='bold'>Lowest Amount</span></div>
+            <div class='col-md-1'>{{summary.lowestAmount | currency}}</div>            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

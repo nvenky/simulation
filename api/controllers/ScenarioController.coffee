@@ -1,15 +1,22 @@
 module.exports =
    simulate: (req, res) ->
-     @camelCaseToUnderscores = (str) ->
+
+     @marketFilterQueryKey = (filter) ->
+       switch(filter)
+         when 'eventTypeId' then 'event.event_type_id'
+         else @camelCaseToUnderscore(filter)         
+     @camelCaseToUnderscore = (str) ->
         str.replace(/([a-z\d])([A-Z])/g, '$1_$2').toLowerCase()
+     
      @simulation = req.body
 
      @marketFilterQuery = {status: 'CLOSED'}
-     Object.keys(@simulation.marketFilter).map (key) => @marketFilterQuery[@camelCaseToUnderscores(key)] = @simulation.marketFilter[key] 
+     eventTypeId = @marketFilterQuery.eventTypeId
+     Object.keys(@simulation.marketFilter).map (key) => @marketFilterQuery[@marketFilterQueryKey(key)] = @simulation.marketFilter[key] 
 
      Race.native (err, raceCollection) =>
        mapFunction = () ->
-         Mapper = () -> 
+         Mapper = () ->
            map: (record) ->
             for scenario in scenarios
              for position in @positions(scenario, record.market_runners.length)
