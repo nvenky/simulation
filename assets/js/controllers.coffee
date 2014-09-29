@@ -110,10 +110,14 @@ angular.module('PuntersBotApp.controllers', [])
               ]
 
       $scope.run = =>
+        $scope.loading = true
         $scope.summary = null
         @chart.destroy() if @chart
         $http.post('/scenario/simulate', $scope.simulationParams)
+          .error ->
+            $scope.loading = false
           .success (data, status) =>
+            $scope.loading = false
             if !data.response or data.response.length == 0
               $('#chart').html 'No Data found'
               return
