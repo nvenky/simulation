@@ -12,7 +12,8 @@ module.exports =
 
      @marketFilterQuery = {status: 'CLOSED'}
      eventTypeId = @marketFilterQuery.eventTypeId
-     Object.keys(@simulation.marketFilter).map (key) => @marketFilterQuery[@marketFilterQueryKey(key)] = @simulation.marketFilter[key] 
+     for key of Object.keys(@simulation.marketFilter)
+         @marketFilterQuery[@marketFilterQueryKey(key)] = @simulation.marketFilter[key] if @simulation.marketFilter[key]
 
      Race.native (err, raceCollection) =>
        mapFunction = () ->

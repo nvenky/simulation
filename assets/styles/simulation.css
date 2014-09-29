@@ -1,3 +1,19 @@
 #page-wrapper{
- margin: 10px 20px;
+ margin: 30px 20px;
+}
+
+.scenario-body{
+  background-color: #f8f8f8;
+}
+
+.scenario-body.back{
+  background-color: #c8e4f6;
+}
+
+.scenario-body.lay{
+  background-color: #fad5dd;
+}
+
+.scenario-body.lay_sp{
+  background-color: #fff;
 }
