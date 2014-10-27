@@ -23,6 +23,7 @@ angular.module('PuntersBotApp.controllers', [])
          $('.homepage .navbar-collapse ul li a').click ->
             $('.homepage .navbar-toggle:visible').click()
   ]
+
   .controller 'SimulationController', ['$scope', '$http', '$log', ($scope, $http, $log) ->
       $scope.exchanges = [{id: 1, name:'Australia'},{id: 2, name: 'International'}]
       $scope.eventTypes = [{id: 7, name: 'Horse Racing'},{id: 4339, name: 'Greyhound Racing'}]
@@ -35,10 +36,9 @@ angular.module('PuntersBotApp.controllers', [])
           scenarios: [{stake: 5, range: 'Custom'}],
           marketFilter: {marketType: 'WIN', exchangeId: 1}
       }
-      
       $scope.addScenario = ->
         $scope.simulationParams.scenarios.push({stake: 5, range: 'Custom'})
-      
+
       $scope.deleteScenario = (index)->
         $scope.simulationParams.scenarios.splice(index, 1)
 
@@ -49,26 +49,37 @@ angular.module('PuntersBotApp.controllers', [])
          lowestAmount = 0
          highestAmount = 0
          winningRaces = 0
+         prevValue = 0
+         losingStreak = 0
+         currentLosingStreak = 0
          series =  for result, i in data.response
-            amount = result.value.ret
-            raceResultsSeries.push(amount)
-            summaryAmount += amount
-            raceSummarySeries.push(summaryAmount)
-            winningRaces += 1 if amount > 0
-            lowestAmount = summaryAmount if summaryAmount < lowestAmount
-            highestAmount = summaryAmount if summaryAmount > highestAmount
-            
+           amount = result.value.ret
+           #if prevValue < 0 # Doubling strategy
+           # amount = amount * Math.pow(2,currentLosingStreak)
+           # console.log(amount)
+           prevValue = amount 
+           raceResultsSeries.push(amount)
+           summaryAmount += amount
+           raceSummarySeries.push(summaryAmount)
+           if amount > 0
+             winningRaces += 1
+             currentLosingStreak = 0
+           else
+             currentLosingStreak += 1
+             losingStreak = currentLosingStreak if losingStreak < currentLosingStreak
+           lowestAmount = summaryAmount if summaryAmount < lowestAmount
+           highestAmount = summaryAmount if summaryAmount > highestAmount
          summary =
             lowestAmount: lowestAmount
             highestAmount: highestAmount
             profitLoss: raceSummarySeries[raceSummarySeries.length - 1]
             winningRaces: winningRaces
             winningPercentage: (winningRaces * 100) / data.stats.counts.output
+            losingStreak: losingStreak
             counts: data.stats.counts
             series:
               raceResultsSeries: raceResultsSeries
               raceSummarySeries: raceSummarySeries
-
 
 
       @renderSummary = (processedData) ->

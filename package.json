@@ -30,7 +30,7 @@
     "sails-mongo": "~0.10.2"
   },
   "engines": {
-    "node": "~0.10.3"
+    "node": "~0.10.32"
   },
   "scripts": {
     "start": "node app.js",
@@ -44,6 +44,7 @@
   "author": "nvenky",
   "license": "",
   "devDependencies": {
+    "browserify": "^6.0.2",
     "grunt-forever": "^0.4.4"
   }
 }

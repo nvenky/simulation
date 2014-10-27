@@ -15,8 +15,8 @@ module.exports = function(grunt) {
 		dev: {
 			options: {
 				bare: true,
-				sourceMap: true,
-				sourceRoot: './'
+				sourceMap: false,
+				sourceRoot: ''
 			},
 			files: [{
 				expand: true,
